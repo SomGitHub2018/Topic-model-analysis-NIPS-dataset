@@ -49,10 +49,12 @@ print(ldamodel.print_topics(num_topics=10, num_words=4))
 print("Saving model")
 model = ldamodel
 # save model
-ldamodel.save('../output/model.atmodel')
+ldamodel.save('output/model.atmodel')
 print("model saved")
 # Load model
-# model = gensim.models.ldamodel.LdaModel.load('../output/model.atmodel')
+# model = gensim.models.ldamodel.LdaModel.load('output/model.atmodel')
+
+exit()
 
 ###Running the model
 # model[df1.Corpus[100]]
