@@ -10,12 +10,15 @@ import gensim
 tokenizer = RegexpTokenizer(r'\w+')
 en_stop = set(stopwords.words('english'))
 # Create p_stemmer of class PorterStemmer
-# p_stemmer = PorterStemmer()
+p_stemmer = PorterStemmer()
 
+print("Reading data")
 # df9 = pd.read_csv("papers.csv")
 df9 = pd.read_csv("../data/papers.csv", encoding="utf8", engine="python")
 
 texts = []
+
+print("Data pre processing")
 ################################### Remove numbers and single letter words
 # loop through document list
 for i in df9['paper_text']:
@@ -27,25 +30,27 @@ for i in df9['paper_text']:
     stopped_tokens = [i for i in tokens if (not i in en_stop and not str(i).isdigit() and len(str(i)) > 2)]
 
     # stem tokens
-    # stemmed_tokens = [p_stemmer.stem(i) for i in stopped_tokens]
+    stemmed_tokens = [p_stemmer.stem(i) for i in stopped_tokens]
 
     # add tokens to list
     texts.append(stopped_tokens)
 
 df9['Cleaned_PaperText'] = pd.Series(texts, index=df9.index)
 
+print("Creating dictionary")
 dictionary = corpora.Dictionary(texts)
 corpus = [dictionary.doc2bow(text) for text in texts]
 df9['Corpus'] = pd.Series(corpus, index=df9.index)
-ldamodel = gensim.models.ldamodel.LdaModel(corpus, num_topics=30, id2word=dictionary, passes=20)
-print(ldamodel.print_topics(num_topics=2, num_words=4))
 
-#TODO
-print("yes")
-exit()
+print("Creating model")
+ldamodel = gensim.models.ldamodel.LdaModel(corpus, num_topics=10, id2word=dictionary, passes=20)
+print(ldamodel.print_topics(num_topics=10, num_words=4))
+
+print("Saving model")
 model = ldamodel
 # save model
-# ldamodel.save('../output/model.atmodel')
+ldamodel.save('../output/model.atmodel')
+print("model saved")
 # Load model
 # model = gensim.models.ldamodel.LdaModel.load('../output/model.atmodel')
 
