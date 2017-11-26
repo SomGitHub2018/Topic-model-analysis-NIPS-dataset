@@ -3,14 +3,18 @@ import pandas as pd
 from nltk.tokenize import RegexpTokenizer
 # from stop_words import get_stop_words
 from nltk.stem.porter import PorterStemmer
+from nltk.stem.wordnet import WordNetLemmatizer
 from gensim import corpora, models
 from nltk.corpus import stopwords
 import gensim
+from gensim.models import Phrases
+import pyLDAvis.gensim
 
 tokenizer = RegexpTokenizer(r'\w+')
 en_stop = set(stopwords.words('english'))
 # Create p_stemmer of class PorterStemmer
 p_stemmer = PorterStemmer()
+lemmatizer = WordNetLemmatizer()
 
 print("Reading data")
 # df9 = pd.read_csv("papers.csv")
@@ -31,9 +35,20 @@ for i in df9['paper_text']:
 
     # stem tokens
     stemmed_tokens = [p_stemmer.stem(i) for i in stopped_tokens]
+    lemmatized_tokens = [lemmatizer.lemmatize(i) for i in stopped_tokens]
+
 
     # add tokens to list
     texts.append(stopped_tokens)
+    #texts.append(lemmatized_tokens)
+
+# Add bigrams and trigrams to docs.
+#bigram = Phrases(texts,min_count=25)
+#for idx in range(len(texts)):
+    #for token in bigram[texts[idx]]:
+        #if '_' in token:
+            # Token is a bigram, add to document.
+            #texts[idx].append(token)
 
 df9['Cleaned_PaperText'] = pd.Series(texts, index=df9.index)
 
