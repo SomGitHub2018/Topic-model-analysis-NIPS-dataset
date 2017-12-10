@@ -4,6 +4,11 @@ import pickle
 import numpy as np
 from scipy.interpolate import spline
 
+#load pickle
+pickle_in = open("pickle_data.pickle","rb")
+p_dict = pickle.load(pickle_in)
+pickle_in.close()
+
 
 # returns
 # topic_yr_map = {1987: [23.477306301575261, 17.74636315217273, 26.847394613504079, 11.997810091403467, 6.4015614721370984,
@@ -35,6 +40,9 @@ def choose_max_prob_topic():
     print(topic_yr_map)
     print(doc_yr_count)
 
+    p_dict['topic_yr_map'] = topic_yr_map
+    p_dict['doc_yr_count'] = doc_yr_count
+
     return topic_yr_map, doc_yr_count
 
 # returns {1987: [2.6085895890639179, 1.9718181280191922, 2.983043845944898, 1.3330900101559409, 0.71128460801523308,...
@@ -62,9 +70,6 @@ def viz_tot(a, x): # a = yr_topic_map
     plt.show()
 
 
-#load pickle
-pickle_in = open("pickle_data.pickle","rb")
-p_dict = pickle.load(pickle_in)
 df9_yrs = p_dict['df9_yrs']
 distinct_yrs = p_dict['distinct_yrs']
 corpus = p_dict['corpus']
@@ -77,7 +82,8 @@ model = gensim.models.ldamodel.LdaModel.load('output/model.atmodel')
 topic_yr_map = {}
 doc_yr_count = {}
 for i in distinct_yrs:
-    topic_yr_map[i] = [0]*len(distinct_yrs)
+    # topic_yr_map[i] = [0]*len(distinct_yrs)
+    topic_yr_map[i] = [0]*10
     doc_yr_count[i] = 0
 
 
@@ -85,3 +91,8 @@ for i in distinct_yrs:
 choose_max_prob_topic() # TOT - 2
 topic_yr_map = normalize_for_viz(doc_yr_count, topic_yr_map, distinct_yrs)
 viz_tot(topic_yr_map, distinct_yrs)
+
+
+pickle_out = open("pickle_data.pickle", "wb")
+pickle.dump(p_dict, pickle_out)
+pickle_out.close()
