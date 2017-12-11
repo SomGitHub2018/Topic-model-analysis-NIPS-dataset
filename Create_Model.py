@@ -1,15 +1,33 @@
+import pickle
+import gensim
 import pandas as pd
-# import csv
-from nltk.tokenize import RegexpTokenizer
-# from stop_words import get_stop_words
-from nltk.stem.porter import PorterStemmer
-from gensim import corpora, models
+import pyLDAvis
+import pyLDAvis.gensim
+from gensim import corpora
+from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 from nltk.stem.wordnet import WordNetLemmatizer
-from nltk.corpus import stopwords
-import gensim
-import pyLDAvis
-import pickle
+from nltk.tokenize import RegexpTokenizer
+
+#load pickle
+pickle_in = open("pickle_data.pickle","rb")
+p_dict = pickle.load(pickle_in)
+pickle_in.close()
+
+
+
+def pyladavis_viz():
+    # Load model
+    model = gensim.models.ldamodel.LdaModel.load('output/model.atmodel')
+    corpus = p_dict['corpus']
+    dictionary = p_dict['dictionary']
+
+    vis = pyLDAvis.gensim.prepare(model, corpus, dictionary)
+    pyLDAvis.save_html(vis, 'lda.html')
+
+
+pyladavis_viz()
+exit()
 
 tokenizer = RegexpTokenizer(r'\w+')
 en_stop = set(stopwords.words('english'))
@@ -17,26 +35,10 @@ en_stop = set(stopwords.words('english'))
 p_stemmer = PorterStemmer()
 lemmatizer = WordNetLemmatizer()
 
-
-
-pickle_out = open("pickle_data.pickle","wb")
-p_dict = {} # pickle dictionary
-
-def pyladavis_viz():
-    vis = pyLDAvis.gensim.prepare(model, corpus, dictionary)
-    pyLDAvis.save_html(vis, 'lda.html')
-
-tokenizer = RegexpTokenizer(r'\w+')
-en_stop = set(stopwords.words('english'))
-# Create p_stemmer of class PorterStemmer
-p_stemmer = PorterStemmer()
-
 print("Reading data")
 df9 = pd.read_csv("../data/papers.csv", encoding="utf8", engine="python")
 df9_yrs = df9['year']
 distinct_yrs = sorted(set(df9_yrs))
-p_dict['df9_yrs'] = df9_yrs
-p_dict['distinct_yrs'] = distinct_yrs
 
 texts = []
 
@@ -63,13 +65,18 @@ print("Creating dictionary")
 dictionary = corpora.Dictionary(texts)
 corpus = [dictionary.doc2bow(text) for text in texts]
 df9['Corpus'] = pd.Series(corpus, index=df9.index)
-p_dict['dictionary'] = dictionary
-p_dict['corpus'] = corpus
-
 
 # saving pickle file
+p_dict = {} # pickle dictionary
+p_dict['dictionary'] = dictionary
+p_dict['corpus'] = corpus
+p_dict['df9_yrs'] = df9_yrs
+p_dict['distinct_yrs'] = distinct_yrs
+pickle_out = open("pickle_data.pickle","wb")
 pickle.dump(p_dict, pickle_out)
 pickle_out.close()
+
+exit()
 
 print("Creating model")
 ldamodel = gensim.models.ldamodel.LdaModel(corpus, num_topics=10, id2word=dictionary, passes=20)

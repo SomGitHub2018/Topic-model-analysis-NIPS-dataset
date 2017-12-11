@@ -33,8 +33,7 @@ for i in df9['paper_text']:
     # remove stop words from tokens
     stopped_tokens = [i for i in tokens if (not i in en_stop and not str(i).isdigit() and len(str(i)) > 2)]
 
-    # stem tokens
-    stemmed_tokens = [p_stemmer.stem(i) for i in stopped_tokens]
+    # lemmatize tokens
     lemmatized_tokens = [lemmatizer.lemmatize(i) for i in stopped_tokens]
 
 

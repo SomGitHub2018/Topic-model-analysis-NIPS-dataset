@@ -13,7 +13,6 @@ pickle_in = open("pickle_data.pickle","rb")
 p_dict = pickle.load(pickle_in)
 pickle_in.close()
 
-
 df9_yrs = p_dict['df9_yrs']
 distinct_yrs = p_dict['distinct_yrs']
 corpus = p_dict['corpus']
