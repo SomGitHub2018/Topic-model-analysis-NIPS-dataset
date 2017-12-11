@@ -45,7 +45,6 @@ def inter1d():
 
     a = list(p_dict['topic_yr_vals'].values())
 
-
     for topic_number in range(10):
         x = p_dict['distinct_yrs']
         y = p_dict['topic_yr_vals'][topic_number]
@@ -56,7 +55,7 @@ def inter1d():
         f = interpolate.interp1d(x_temp, y_temp, fill_value="extrapolate")
 
         for j in pred_yrs:
-            topic_yr_map_new[j].append(float(f(j)))
+            topic_yr_map_new[j].append(max(0,float(f(j))))
 
     return topic_yr_map_new
 
