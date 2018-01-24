@@ -94,6 +94,8 @@ def choose_max_prob_topic():
         for a,b in topic_prob:
             temp.append(b)
         fh = np.argmax(temp)
+        
+
 
         topic_prob = model[corpus_sh[i]]
         temp = []
@@ -113,9 +115,13 @@ def choose_max_prob_topic():
 
 
 #Main Fn Call
-# data_preprocessing()
+data_preprocessing()
 choose_max_prob_topic()
 
 pickle_out = open("pickle_data.pickle", "wb")
 pickle.dump(p_dict, pickle_out)
 pickle_out.close()
+
+#4705 - Equals
+#1855 - NonEquals
+#Accuracy -

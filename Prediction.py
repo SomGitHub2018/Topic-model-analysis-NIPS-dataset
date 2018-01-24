@@ -15,8 +15,10 @@ pickle_in.close()
 topic_number = 5
 x = p_dict['distinct_yrs']
 topic_yr_map = (p_dict['topic_yr_map'])
-y = p_dict['topic_yr_vals'][topic_number]
-pred_yrs = list(range(2017,2022))
+
+# print(p_dict['topic_yr_vals'])
+# y = p_dict['topic_yr_vals'][topic_number]
+pred_yrs = list(range(2017,2020))
 
 #a = topic_yr_map
 #x = distinct_yrs
@@ -54,21 +56,21 @@ def inter1d():
 
         f = interpolate.interp1d(x_temp, y_temp, fill_value="extrapolate")
 
-        for j in pred_yrs:
-            topic_yr_map_new[j].append(max(0,float(f(j))))
+        for yr in pred_yrs:
+            topic_yr_map_new[yr].append(max(0,float(f(yr))))
 
     return topic_yr_map_new
 
 
 # Main Fn Call
 a = inter1d()
+# print(a)
 topic_yr_map.update(a)
-print(x)
-print(type(x))
-print(pred_yrs)
-print(type(pred_yrs))
 x+=pred_yrs
-print(x)
+# print(topic_yr_map)
+print(topic_yr_map[2017])
+print(topic_yr_map[2019])
+print(topic_yr_map.keys())
+# exit()
 
-# print(topic_yr_map.keys())
 viz_tot(topic_yr_map,x)

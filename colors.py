@@ -1,2 +1,0 @@
-light_colors = ['gray', 'blue', 'violet', 'red', 'springgreen', 'khaki', 'cyan', 'sienna', 'mediumslateblue', 'hotpink']
-dark_colors = ['black', 'darkblue', 'fuchsia', 'firebrick', 'forestgreen', 'yellow', 'teal', 'brown', 'indigo', 'deeppink']
